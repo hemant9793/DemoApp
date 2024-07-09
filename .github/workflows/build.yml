@@ -1,0 +1,30 @@
+name: React Native Build
+
+on:
+  push:
+    branches: [ dev ]  # Adjust branch names as needed
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest  # Or macOS-latest for iOS builds
+
+    steps:
+      - uses: actions/checkout@v3  # Checkout your code from GitHub
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.0  # Adjust Node.js version as needed
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build Android app (replace with your build command)
+        run: cd android && ./gradlew clean && ./gradlew assembleRelease
+        
+
+      # - name: Upload artifact (optional)
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: android-app
+      #     path: android/app/build/outputs/apk/release/  # Adjust path as needed
