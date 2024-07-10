@@ -19,6 +19,9 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+      - name: Set gradlew permissions
+        run: chmod +x gradlew
+
       - name: Build Android app (replace with your build command)
         run: cd android && ./gradlew clean && ./gradlew assembleRelease
         
