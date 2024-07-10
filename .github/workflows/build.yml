@@ -27,12 +27,9 @@ jobs:
 
       - name: List all folders
         run: ls
-        
-      - name: Print Gradle version (if applicable)
-        run: ./gradlew -v
 
       - name: Build Android app (replace with your build command)
-        run: ./gradlew clean && ./gradlew assembleRelease
+        run: cd android && ./gradlew clean && ./gradlew assembleRelease
         
 
       # - name: Upload artifact (optional)
