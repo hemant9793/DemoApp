@@ -22,6 +22,15 @@ jobs:
       - name: Set gradlew permissions
         run: cd android && chmod +x gradlew
 
+      - name: Print working directory
+        run: pwd
+
+      - name: List all folders
+        run: ls
+        
+      - name: Print Gradle version (if applicable)
+        run: ./gradlew -v
+
       - name: Build Android app (replace with your build command)
         run: ./gradlew clean && ./gradlew assembleRelease
         
