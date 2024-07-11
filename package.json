@@ -7,9 +7,12 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "build-apk": "cd android && ./gradlew clean && ./gradlew assembleRelease && explorer app/build/outputs/apk/release/",
+    "build-aab": "cd android && ./gradlew clean && ./gradlew bundleRelease && explorer app/build/outputs/bundle/release/"
   },
   "dependencies": {
+    "@react-native-firebase/app": "^20.1.0",
     "react": "18.1.0",
     "react-native": "0.70.6"
   },
