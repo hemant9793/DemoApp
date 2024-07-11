@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3  # Checkout your code from GitHub
 
-      - name: Use Node.js 20
+      - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
           node-version: 16.15.0  # Adjust Node.js version as needed
@@ -22,18 +22,14 @@ jobs:
       - name: Set gradlew permissions
         run: cd android && chmod +x gradlew
 
-      - name: Print working directory
-        run: pwd
-
-      - name: List all folders
-        run: ls
-
       - name: Build Android app (replace with your build command)
         run: cd android && ./gradlew clean && ./gradlew assembleRelease
         
+      - name: List all folders
+        run: ls
 
-      # - name: Upload artifact (optional)
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: android-app
-      #     path: android/app/build/outputs/apk/release/  # Adjust path as needed
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-app
+          path: android/app/build/outputs/apk/release/app-release.apk  # Adjust path as needed
