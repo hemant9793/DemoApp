@@ -40,5 +40,13 @@ jobs:
       - name: Debug secrets
         run: echo ${{ secrets.FIREBASE_APP_ID }} && echo ${{ secrets.FIREBASE_TOKEN }}
 
+      - name: Set up Google Cloud credentials
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/google-credentials.json
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $GOOGLE_APPLICATION_CREDENTIALS
+
       - name: Distribute APK to Firebase App Distribution
-        run: firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --token ${{ secrets.FIREBASE_TOKEN }}
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/google-credentials.json
+        run: firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }}
