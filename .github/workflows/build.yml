@@ -47,8 +47,16 @@ jobs:
           echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > $GOOGLE_APPLICATION_CREDENTIALS
           echo "Service account key file content:"
           cat $GOOGLE_APPLICATION_CREDENTIALS
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}"
 
-      - name: Distribute APK to Firebase App Distribution
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/google-credentials.json
-        run: firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }}
+      # - name: Distribute APK to Firebase App Distribution
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/google-credentials.json
+      #   run: firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }}
+
+      - name: Upload and Distribute App
+        uses: mastersam07/firebase-app-distribution-action@v0.1
+        with:
+          serviceCredentialsFileContent: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          file: 'android/app/build/outputs/apk/release/app-release.apk'
