@@ -14,8 +14,10 @@
   "dependencies": {
     "@react-native-firebase/app": "^20.1.0",
     "@react-native-firebase/app-distribution": "^20.2.0",
+    "axios": "^1.8.4",
     "react": "18.1.0",
-    "react-native": "0.70.6"
+    "react-native": "0.70.6",
+    "react-native-ratings": "^8.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
