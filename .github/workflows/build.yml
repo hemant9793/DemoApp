@@ -2,7 +2,9 @@ name: React Native Build
 
 on:
   push:
-    branches: [dev] # Adjust branch names as needed
+    branches:
+      - dev
+      - feature/expense-tracker
 
 jobs:
   build-android:
