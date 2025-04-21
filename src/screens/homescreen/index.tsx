@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Button,
+  Keyboard,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -26,6 +27,7 @@ import {
 
 import {ExpenseItem, User} from '../../types';
 import {extractNameFromSimpleId, generateSimpleIdFromName} from './helpers';
+import {useToast} from '../../common/components/toast/ToastContext';
 
 const ExpenseScreen: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -43,6 +45,8 @@ const ExpenseScreen: React.FC = () => {
 
   const [monthlyBudget, setMonthlyBudget] = useState<number | null>(null);
   const [spentAmount, setSpentAmount] = useState(0);
+
+  const {showToast} = useToast();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -109,6 +113,7 @@ const ExpenseScreen: React.FC = () => {
     console.log('addExpense -> selectedMonth', selectedMonth, date);
     if (selectedMonth && date) {
       // Ensure both selectedMonth and the existing date are available
+      Keyboard.dismiss();
       const selectedMonthFromDate = selectedMonth.getMonth();
       const selectedYear = selectedMonth.getFullYear();
       const currentMonth = date.getMonth();
@@ -135,10 +140,14 @@ const ExpenseScreen: React.FC = () => {
         await addExpenseToFirestore(currentUser.id, newExpense);
         setTitle('');
         setAmount('');
-        setDate(new Date());
+        showToast('Transaction saved!', 'success');
       } else {
         console.log(
           'Selected date is not within the same month and year. Ignoring.',
+        );
+        showToast(
+          'Selected date is not within the same month and year',
+          'error',
         );
       }
     }
@@ -190,17 +199,17 @@ const ExpenseScreen: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <View style={{justifyContent: 'center'}}>
-          <Text style={styles.header}>Expense Tracker</Text>
+          <Text style={styles.header}>Trackify</Text>
           <Text style={styles.headerName}>
             {`Welcome ${extractNameFromSimpleId(currentUser?.id)}`}
           </Text>
         </View>
         <Text
-          style={styles.headerName}
+          style={[styles.headerName, {color: 'red', marginLeft: 100}]}
           onPress={async () => {
             await AsyncStorage.clear();
           }}>
-          Clear
+          Clear data
         </Text>
         <TouchableOpacity onPress={() => setShowMonthPicker(true)}>
           <Text style={styles.monthText}>{getMonthYear(selectedMonth)}</Text>
@@ -229,7 +238,9 @@ const ExpenseScreen: React.FC = () => {
         onDateChange={onDateChange}
         addExpense={addExpense}
       />
-      <Text style={styles.header}>Monthly Transactions</Text>
+      <Text style={styles.header}>{`${
+        getMonthYear(selectedMonth)?.split(' ')?.[0]
+      }'s Transactions`}</Text>
       <ExpenseList expenses={filterExpensesByMonth(expenses, selectedMonth)} />
 
       <MonthPickerModal
@@ -244,17 +255,19 @@ const ExpenseScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    padding: 12,
     flex: 1,
   },
   header: {
     fontSize: 22,
     fontWeight: 'bold',
+    color: 'black',
   },
   headerName: {
     fontSize: 12,
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginLeft: 4,
+    color: 'black',
   },
   headerRow: {
     flexDirection: 'row',

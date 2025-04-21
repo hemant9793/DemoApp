@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: 'center',
     gap: 10,
+    backgroundColor: '#fff',
   },
   input: {
     flex: 1,
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   card: {
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 16,
     flexDirection: 'row',
@@ -141,9 +142,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   cardText: {
-    color: '#666',
+    color: 'black',
     fontSize: 14,
     marginBottom: 4,
+    fontWeight: 'bold',
   },
   budgetAmount: {
     fontSize: 18,

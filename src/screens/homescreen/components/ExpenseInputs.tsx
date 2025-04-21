@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
   },
   typeRow: {
     flexDirection: 'column',
+    flex: 0.8,
   },
   typeChip: {
     flex: 1,
@@ -177,9 +178,10 @@ const styles = StyleSheet.create({
     borderColor: '#007bff',
   },
   typeText: {
-    fontSize: 8,
+    fontSize: 10,
     color: '#555',
     fontWeight: '500',
+    marginTop: -1.5,
   },
   activeTypeText: {
     color: '#fff',

@@ -10,9 +10,14 @@
 
 import React from 'react';
 import ExpenseScreen from './src/screens/homescreen';
+import {ToastProvider} from './src/common/components/toast/ToastContext';
 
 const App = () => {
-  return <ExpenseScreen />;
+  return (
+    <ToastProvider>
+      <ExpenseScreen />
+    </ToastProvider>
+  );
 };
 
 export default App;
