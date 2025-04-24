@@ -9,14 +9,18 @@
  */
 
 import React from 'react';
-import ExpenseScreen from './src/screens/homescreen';
+import {NavigationContainer} from '@react-navigation/native';
+
 import {ToastProvider} from './src/common/components/toast/ToastContext';
+import {RootTabs} from './src/navigation/tabNavigator';
 
 const App = () => {
   return (
-    <ToastProvider>
-      <ExpenseScreen />
-    </ToastProvider>
+    <NavigationContainer>
+      <ToastProvider>
+        <RootTabs />
+      </ToastProvider>
+    </NavigationContainer>
   );
 };
 

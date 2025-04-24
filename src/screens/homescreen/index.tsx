@@ -17,6 +17,8 @@ import {
   MonthPickerModal,
 } from './components';
 import {DateTimePickerEvent} from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/Ionicons'; // Import Ionicons from react-native-vector-icons
+
 import {
   addExpenseToFirestore,
   setMonthlyBudget as setMonthlyBudgetOnFireStore,
@@ -28,6 +30,8 @@ import {
 import {ExpenseItem, User} from '../../types';
 import {extractNameFromSimpleId, generateSimpleIdFromName} from './helpers';
 import {useToast} from '../../common/components/toast/ToastContext';
+import {AppSingleton} from '../../constants';
+import {Loader} from '../../common/components/loader/Loader';
 
 const ExpenseScreen: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -46,13 +50,18 @@ const ExpenseScreen: React.FC = () => {
   const [monthlyBudget, setMonthlyBudget] = useState<number | null>(null);
   const [spentAmount, setSpentAmount] = useState(0);
 
+  const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState('');
+
   const {showToast} = useToast();
 
   useEffect(() => {
     const loadUser = async () => {
       const storedUser = await AsyncStorage.getItem('user');
       if (storedUser) {
-        setCurrentUser(JSON.parse(storedUser));
+        const newUser = JSON.parse(storedUser);
+        setCurrentUser(newUser);
+        AppSingleton.user = newUser;
         setShowNameInput(false);
       } else {
         setShowNameInput(true);
@@ -75,10 +84,14 @@ const ExpenseScreen: React.FC = () => {
         const budget = await fetchMonthlyBudget(currentUser.id, monthYear);
         console.log('loadInitialData -> budget', budget);
         setMonthlyBudget(budget);
+        setLoadingText('');
+        setLoading(false);
       }
     };
 
     if (currentUser) {
+      setLoadingText('Loading transactions...');
+      setLoading(true);
       loadInitialData();
     }
   }, [currentUser, selectedMonth]);
@@ -166,6 +179,7 @@ const ExpenseScreen: React.FC = () => {
         name: userName,
       };
       setCurrentUser(newUser);
+      AppSingleton.user = newUser;
       await AsyncStorage.setItem('user', JSON.stringify(newUser));
       setShowNameInput(false);
 
@@ -201,19 +215,27 @@ const ExpenseScreen: React.FC = () => {
         <View style={{justifyContent: 'center'}}>
           <Text style={styles.header}>Trackify</Text>
           <Text style={styles.headerName}>
-            {`Welcome ${extractNameFromSimpleId(currentUser?.id)}`}
+            {`Welcome `}
+            <Text style={{color: '#007bff'}}>
+              {extractNameFromSimpleId(currentUser?.id)}
+            </Text>
           </Text>
         </View>
-        <Text
-          style={[styles.headerName, {color: 'red', marginLeft: 100}]}
-          onPress={async () => {
-            await AsyncStorage.clear();
-          }}>
-          Clear data
-        </Text>
-        <TouchableOpacity onPress={() => setShowMonthPicker(true)}>
-          <Text style={styles.monthText}>{getMonthYear(selectedMonth)}</Text>
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TouchableOpacity onPress={() => setShowMonthPicker(true)}>
+            <Text style={styles.monthText}>{getMonthYear(selectedMonth)}</Text>
+          </TouchableOpacity>
+          <Icon
+            name={'log-out-outline'}
+            size={12}
+            color={'red'}
+            onPress={async () => {
+              setLoading(true);
+              await AsyncStorage.clear();
+              setLoading(false);
+            }}
+          />
+        </View>
       </View>
 
       <BudgetCard
@@ -249,6 +271,7 @@ const ExpenseScreen: React.FC = () => {
         onClose={() => setShowMonthPicker(false)}
         onMonthPick={(newDate: any) => setSelectedMonth(newDate)}
       />
+      {loading && <Loader text={loadingText} visible={loading} />}
     </View>
   );
 };
@@ -261,7 +284,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: 'black',
+    color: '#007bff',
   },
   headerName: {
     fontSize: 12,
@@ -278,6 +301,7 @@ const styles = StyleSheet.create({
   monthText: {
     fontSize: 16,
     color: '#007bff',
+    marginRight: 15,
   },
   nameInputContainer: {
     flex: 1,

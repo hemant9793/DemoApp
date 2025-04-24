@@ -68,7 +68,7 @@ const ExpenseList: React.FC<ExpenseListProps> = ({expenses}) => {
                   ? styles.expenseAmount
                   : styles.incomeAmount,
               ]}>
-              {item.category === 'expense' ? '-' : '+'}₹{item.amount.toFixed(2)}
+              {item.category === 'expense' ? '-' : '+'}₹{item.amount.toFixed(1)}
             </Text>
           </View>
           <Text style={styles.date}>
@@ -83,7 +83,6 @@ const ExpenseList: React.FC<ExpenseListProps> = ({expenses}) => {
 const styles = StyleSheet.create({
   listContainer: {
     paddingBottom: 10,
-    paddingHorizontal: 8,
   },
   sectionHeader: {
     fontSize: 16,

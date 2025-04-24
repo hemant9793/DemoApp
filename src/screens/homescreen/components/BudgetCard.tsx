@@ -90,7 +90,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({
         <Text style={styles.budgetAmount}>₹ {initialBudget}</Text>
       </View>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={styles.cardText}>Remaining</Text>
+        <Text style={styles.cardText}>Saving</Text>
         <Text style={styles.budgetAmount}>₹ {budgetLeft.toFixed(1)}</Text>
       </View>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>

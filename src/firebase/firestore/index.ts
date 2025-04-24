@@ -85,3 +85,45 @@ export const createUserTable = async (newUser: User) => {
     console.error('Error creating user document:', error);
   }
 };
+
+// Save or update a good day note
+export const setGoodDayNote = async (
+  userId: string,
+  date: string, // Format: "YYYY-MM-DD"
+  note: string,
+) => {
+  const ref = getUserDoc(userId).collection('goodDays').doc(date);
+  await ref.set(
+    {
+      note,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    },
+    {merge: true},
+  );
+};
+
+// Fetch note for a specific date
+export const fetchGoodDayNote = async (
+  userId: string,
+  date: string,
+): Promise<string | null> => {
+  const doc = await getUserDoc(userId).collection('goodDays').doc(date).get();
+  return doc.exists ? doc.data()?.note ?? null : null;
+};
+
+// Fetch all good days for a given year (for UI highlights)
+export const fetchGoodDaysForYear = async (
+  userId: string,
+  year: number,
+): Promise<Set<string>> => {
+  const start = new Date(`${year}-01-01T00:00:00Z`);
+  const end = new Date(`${year + 1}-01-01T00:00:00Z`);
+
+  const snapshot = await getUserDoc(userId)
+    .collection('goodDays')
+    .where('createdAt', '>=', firestore.Timestamp.fromDate(start))
+    .where('createdAt', '<', firestore.Timestamp.fromDate(end))
+    .get();
+
+  return new Set(snapshot.docs.map(doc => doc.id)); // doc.id is the date
+};
