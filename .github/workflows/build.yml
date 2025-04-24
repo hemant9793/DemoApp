@@ -30,11 +30,11 @@ jobs:
       - name: List all folders
         run: ls
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: android-app
-          path: android/app/build/outputs/apk/release/app-release.apk
+      # - name: Upload artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: android-app
+      #     path: android/app/build/outputs/apk/release/app-release.apk
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools@12.5.0
